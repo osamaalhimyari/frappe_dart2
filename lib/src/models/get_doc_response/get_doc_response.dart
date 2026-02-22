@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:frappe_dart/src/models/get_doc_response/doc.dart';
 import 'package:frappe_dart/src/models/get_doc_response/docinfo.dart';
 
-import 'dart:convert';
-
 class GetDocResponse {
   GetDocResponse({
     this.docs,
