@@ -192,7 +192,6 @@ class FrappeV15 implements FrappeApi {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        print(json.encode(response.statusCode));
         return DesktopPageResponse.fromMap(response.data!);
       } else {
         throw Exception(
