@@ -67,7 +67,7 @@ class FrappeRealtimeClient {
   /// Get the host URL for Socket.IO connection
   String _getHost() {
     // TODO: implement ip address instance
-    return '$_baseUrl/$_siteName';
+    return '$_baseUrl';
   }
 
   /// Initialize the realtime client
