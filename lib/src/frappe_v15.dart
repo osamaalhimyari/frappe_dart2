@@ -131,17 +131,17 @@ class FrappeV15 implements FrappeApi {
   }
 
   // Helper method to extract user ID from cookies
-  String? _extractUserIdFromCookies(String cookies) {
-    final cookieParts = cookies.split(';');
-    for (final part in cookieParts) {
-      if (part.trim().startsWith('SameSite=Lax,user_id=')) {
-        return Uri.decodeComponent(
-          part.trim().substring('SameSite=Lax,user_id='.length),
-        );
-      }
-    }
-    return null;
-  }
+  // String? _extractUserIdFromCookies(String cookies) {
+  //   final cookieParts = cookies.split(';');
+  //   for (final part in cookieParts) {
+  //     if (part.trim().startsWith('SameSite=Lax,user_id=')) {
+  //       return Uri.decodeComponent(
+  //         part.trim().substring('SameSite=Lax,user_id='.length),
+  //       );
+  //     }
+  //   }
+  //   return null;
+  // }
 
   @override
   Future<DeskSidebarItemsResponse> getDeskSideBarItems() async {
@@ -368,7 +368,7 @@ class FrappeV15 implements FrappeApi {
   @override
   Future<GetDocResponse> getdoc(String doctype, String name) async {
     final url = '$_baseUrl/api/method/frappe.desk.form.load.getdoc';
-    // try {
+    try {
       final response = await _dio.post<Map<String, dynamic>>(
         url,
         options: Options(
@@ -387,11 +387,11 @@ class FrappeV15 implements FrappeApi {
           'Failed to get doc. Response Status: ${response.statusCode}',
         );
       }
-    // } on DioException catch (e) {
-    //   throw Exception(handleDioError(e));
-    // } catch (e) {
-    //   throw Exception('''An unknown error occurred while retrieving doc: $e''');
-    // }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('''An unknown error occurred while retrieving doc: $e''');
+    }
   }
 
   @override
@@ -914,7 +914,7 @@ class FrappeV15 implements FrappeApi {
       }
     } on DioException catch (e) {
       throw Exception(handleDioError(e));
-    } catch (e, stack) {
+    } catch (e) {
       throw Exception('An error occurred while sending email: $e');
     }
   }
@@ -946,7 +946,7 @@ class FrappeV15 implements FrappeApi {
       }
     } on DioException catch (e) {
       throw Exception(handleDioError(e));
-    } catch (e, stack) {
+    } catch (e) {
       throw Exception('An error occurred while fetching the list: $e');
     }
   }

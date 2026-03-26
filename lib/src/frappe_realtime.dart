@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, inference_failure_on_function_return_type
+
 import 'dart:async';
 
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -50,7 +52,7 @@ class FrappeRealtimeClient {
   // final int _port;
 
   io.Socket? _socket;
-  bool _lazyConnect = false;
+  bool lazyConnect = false;
 
   /// Map to store open tasks with their options
   final Map<String, Map<String, dynamic>> _openTasks = {};
@@ -80,7 +82,7 @@ class FrappeRealtimeClient {
       return;
     }
 
-    _lazyConnect = lazyConnect;
+    lazyConnect = lazyConnect;
 
     final host = _getHost();
 
@@ -118,7 +120,7 @@ class FrappeRealtimeClient {
   void connect() {
     if (_socket != null && !_socket!.connected) {
       _socket!.connect();
-      _lazyConnect = false;
+      lazyConnect = false;
     }
   }
 
