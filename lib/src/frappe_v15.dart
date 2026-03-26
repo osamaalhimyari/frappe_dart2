@@ -90,8 +90,8 @@ class FrappeV15 implements FrappeApi {
         final Map<String, dynamic> headers = response.headers.map;
         if (headers['set-cookie'] != null &&
             headers['set-cookie']![3] != null) {
-          responseBody['user_id'] =
-              headers['set-cookie']![3].split(';')[0].split('=')[1];
+          responseBody['user_id'] =loginRequest.usr;
+              // headers['set-cookie']![3].split(';')[0].split('=')[1];
           responseBody['cookie'] = headers['set-cookie']![0];
         }
 
@@ -368,7 +368,7 @@ class FrappeV15 implements FrappeApi {
   @override
   Future<GetDocResponse> getdoc(String doctype, String name) async {
     final url = '$_baseUrl/api/method/frappe.desk.form.load.getdoc';
-    try {
+    // try {
       final response = await _dio.post<Map<String, dynamic>>(
         url,
         options: Options(
@@ -387,11 +387,11 @@ class FrappeV15 implements FrappeApi {
           'Failed to get doc. Response Status: ${response.statusCode}',
         );
       }
-    } on DioException catch (e) {
-      throw Exception(handleDioError(e));
-    } catch (e) {
-      throw Exception('''An unknown error occurred while retrieving doc: $e''');
-    }
+    // } on DioException catch (e) {
+    //   throw Exception(handleDioError(e));
+    // } catch (e) {
+    //   throw Exception('''An unknown error occurred while retrieving doc: $e''');
+    // }
   }
 
   @override
