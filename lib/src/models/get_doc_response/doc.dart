@@ -83,7 +83,7 @@ class Doc {
         modified: data['modified'] as String?,
         modifiedBy: data['modified_by'] as String?,
         docstatus: data['docstatus'] as int?,
-        idx: data['idx'] as String?,
+        idx: "${data['idx']}" as String?,
         enabled: data['enabled'] as int?,
         email: data['email'] as String?,
         firstName: data['first_name'] as String?,
