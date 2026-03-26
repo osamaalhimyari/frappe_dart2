@@ -368,7 +368,7 @@ class FrappeV15 implements FrappeApi {
   @override
   Future<GetDocResponse> getdoc(String doctype, String name) async {
     final url = '$_baseUrl/api/method/frappe.desk.form.load.getdoc';
-    // try {
+    try {
       final response = await _dio.post<Map<String, dynamic>>(
         url,
         options: Options(
@@ -387,11 +387,11 @@ class FrappeV15 implements FrappeApi {
           'Failed to get doc. Response Status: ${response.statusCode}',
         );
       }
-    // } on DioException catch (e) {
-    //   throw Exception(handleDioError(e));
-    // } catch (e) {
-    //   throw Exception('''An unknown error occurred while retrieving doc: $e''');
-    // }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('''An unknown error occurred while retrieving doc: $e''');
+    }
   }
 
   @override
