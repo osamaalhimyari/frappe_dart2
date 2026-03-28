@@ -8,6 +8,7 @@ import 'package:frappe_dart/src/models/get_doctype_response/table_field.dart';
 
 class Doc {
   Doc({
+    this.fieldsOrder,
     this.doctype,
     this.name,
     this.creation,
@@ -89,6 +90,7 @@ class Doc {
   });
 
   factory Doc.fromMap(Map<String, dynamic> data) => Doc(
+        fieldsOrder: data['fields_order'] as List<String>?,
         doctype: data['doctype'] as String?,
         name: data['name'] as String?,
         creation: data['creation'] as String?,
@@ -194,6 +196,7 @@ class Doc {
   String? owner;
   int? docstatus;
   int? idx;
+  List<String>? fieldsOrder;
   String? searchFields;
   int? issingle;
   int? isVirtual;
@@ -267,6 +270,7 @@ class Doc {
 
   Map<String, dynamic> toMap() => {
         'doctype': doctype,
+        'fields_order': fieldsOrder,
         'name': name,
         'creation': creation,
         'modified': modified,
