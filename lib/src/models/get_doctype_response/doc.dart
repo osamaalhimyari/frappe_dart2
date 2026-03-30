@@ -173,9 +173,9 @@ class Doc {
         formGridTemplates: data['__form_grid_templates'] as dynamic,
         listviewTemplate: data['__listview_template'] as dynamic,
         treeJs: data['__tree_js'] as dynamic,
-       dashboard: data['__dashboard'] == null
-    ? null
-    : Dashboard.fromMap(Map<String, dynamic>.from(data['__dashboard'] as Map)),
+        // dashboard: data['__dashboard'] == null
+        //     ? null
+        //     : Dashboard.fromMap(data['__dashboard'] as Map<String, dynamic>),
         kanbanColumnFields: data['__kanban_column_fields'] as List<dynamic>?,
         templates: data['__templates'] as dynamic,
         autoname: data['autoname'] as String?,
