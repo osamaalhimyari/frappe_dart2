@@ -90,7 +90,8 @@ class Doc {
   });
 
   factory Doc.fromMap(Map<String, dynamic> data) => Doc(
-        fieldsOrder: data['fields_order'] as List<String>?,
+        // Use .cast<String>() for simple string lists
+        fieldsOrder: (data['fields_order'] as List?)?.cast<String>(),
         doctype: data['doctype'] as String?,
         name: data['name'] as String?,
         creation: data['creation'] as String?,
@@ -144,18 +145,21 @@ class Doc {
             data['force_re_route_to_default_view'] as int?,
         showPreviewPopup: data['show_preview_popup'] as int?,
         indexWebPagesForSearch: data['index_web_pages_for_search'] as int?,
-        fields: (data['fields'] as List<dynamic>?)
-            ?.map((e) => Field.fromMap(e as Map<String, dynamic>))
+
+        // FIXED: Using Map<String, dynamic>.from for nested List objects
+        fields: (data['fields'] as List?)
+            ?.map((e) => Field.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList(),
-        permissions: (data['permissions'] as List<dynamic>?)
-            ?.map((e) => Permission.fromMap(e as Map<String, dynamic>))
+        permissions: (data['permissions'] as List?)
+            ?.map((e) => Permission.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList(),
-        links: (data['links'] as List<dynamic>?)
-            ?.map((e) => Link.fromMap(e as Map<String, dynamic>))
+        links: (data['links'] as List?)
+            ?.map((e) => Link.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList(),
-        tableFields: (data['_table_fields'] as List<dynamic>?)
-            ?.map((e) => TableField.fromMap(e as Map<String, dynamic>))
+        tableFields: (data['_table_fields'] as List?)
+            ?.map((e) => TableField.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList(),
+
         js: data['__js'] as String?,
         listJs: data['__list_js'] as String?,
         customJs: data['__custom_js'] as String?,
@@ -173,21 +177,23 @@ class Doc {
         formGridTemplates: data['__form_grid_templates'] as dynamic,
         listviewTemplate: data['__listview_template'] as dynamic,
         treeJs: data['__tree_js'] as dynamic,
-        // dashboard: data['__dashboard'] == null
-        //     ? null
-        //     : Dashboard.fromMap(data['__dashboard'] as Map<String, dynamic>),
+
+        // FIXED: dashboard map parsing
+        dashboard: data['__dashboard'] == null
+            ? null
+            : Dashboard.fromMap(Map<String, dynamic>.from(data['__dashboard'] as Map)),
+
         kanbanColumnFields: data['__kanban_column_fields'] as List<dynamic>?,
         templates: data['__templates'] as dynamic,
         autoname: data['autoname'] as String?,
         documentType: data['document_type'] as String?,
       );
 
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [Doc].
   factory Doc.fromJson(String data) {
-    return Doc.fromMap(json.decode(data) as Map<String, dynamic>);
+    // FIXED: Ensure root map is typed correctly
+    return Doc.fromMap(Map<String, dynamic>.from(json.decode(data) as Map));
   }
+
   String? doctype;
   String? name;
   String? creation;
@@ -350,8 +356,5 @@ class Doc {
         'document_type': documentType,
       };
 
-  /// `dart:convert`
-  ///
-  /// Converts [Doc] to a JSON string.
   String toJson() => json.encode(toMap());
 }
