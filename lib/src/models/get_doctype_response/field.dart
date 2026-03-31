@@ -62,6 +62,7 @@ class Field {
     this.searchFields,
     this.isCustomField,
     this.linkedDocumentType,
+    this.options,
   });
 
   factory Field.fromMap(Map<String, dynamic> data) => Field(
@@ -73,6 +74,7 @@ class Field {
         owner: data['owner'] as String?,
         docstatus: data['docstatus'] as int?,
         parent: data['parent'] as String?,
+        options: data['options'] as String?,
         parentfield: data['parentfield'] as String?,
         parenttype: data['parenttype'] as String?,
         idx: data['idx'] as int?,
@@ -145,6 +147,7 @@ class Field {
   String? parenttype;
   int? idx;
   String? fieldname;
+  String? options;
   String? label;
   String? fieldtype;
   int? searchIndex;
@@ -208,6 +211,7 @@ class Field {
         'idx': idx,
         'fieldname': fieldname,
         'label': label,
+        'options': options,
         'fieldtype': fieldtype,
         'search_index': searchIndex,
         'show_dashboard': showDashboard,
