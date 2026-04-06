@@ -1,310 +1,419 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_doc_response/onload.dart';
-import 'package:frappe_dart/src/models/get_doc_response/role.dart';
-import 'package:frappe_dart/src/models/get_doc_response/social_login.dart';
+import 'package:frappe_dart/src/models/get_doctype_response/dashboard.dart';
+import 'package:frappe_dart/src/models/get_doctype_response/field.dart';
+import 'package:frappe_dart/src/models/get_doctype_response/link.dart';
+import 'package:frappe_dart/src/models/get_doctype_response/permission.dart';
+import 'package:frappe_dart/src/models/get_doctype_response/table_field.dart';
 
 class Doc {
   Doc({
+    this.fieldsOrder,
+    this.doctype,
     this.name,
-    this.owner,
     this.creation,
     this.modified,
     this.modifiedBy,
+    this.owner,
     this.docstatus,
     this.idx,
-    this.enabled,
-    this.email,
-    this.firstName,
-    this.lastName,
-    this.fullName,
-    this.username,
-    this.language,
-    this.timeZone,
-    this.sendWelcomeEmail,
-    this.unsubscribed,
-    this.muteSounds,
-    this.deskTheme,
-    this.searchBar,
-    this.notifications,
-    this.listSidebar,
-    this.bulkActions,
-    this.viewSwitcher,
-    this.formSidebar,
-    this.timeline,
-    this.dashboard,
-    this.newPassword,
-    this.logoutAllSessions,
-    this.documentFollowNotify,
-    this.documentFollowFrequency,
-    this.followCreatedDocuments,
-    this.followCommentedDocuments,
-    this.followLikedDocuments,
-    this.followAssignedDocuments,
-    this.followSharedDocuments,
-    this.threadNotify,
-    this.sendMeACopy,
-    this.allowedInMentions,
-    this.simultaneousSessions,
-    this.lastIp,
-    this.loginAfter,
-    this.userType,
-    this.lastActive,
-    this.loginBefore,
-    this.bypassRestrictIpCheckIf2faEnabled,
-    this.lastLogin,
-    this.lastKnownVersions,
-    this.onboardingStatus,
-    this.doctype,
-    this.blockModules,
-    this.roles,
-    this.userEmails,
-    this.defaults,
-    this.socialLogins,
-    this.onload,
-    this.isStandard,
+    this.searchFields,
+    this.issingle,
+    this.isVirtual,
+    this.isTree,
+    this.istable,
+    this.editableGrid,
+    this.trackChanges,
     this.module,
-    this.label,
-    this.type,
-    this.function,
-    this.aggregateFunctionBasedOn,
+    this.titleField,
+    this.imageField,
+    this.sortField,
+    this.sortOrder,
+    this.description,
+    this.readOnly,
+    this.inCreate,
+    this.allowCopy,
+    this.allowRename,
+    this.allowImport,
+    this.hideToolbar,
+    this.trackSeen,
+    this.maxAttachments,
+    this.icon,
+    this.engine,
+    this.isSubmittable,
+    this.showNameInGlobalSearch,
+    this.custom,
+    this.beta,
+    this.hasWebView,
+    this.allowGuestToView,
+    this.route,
+    this.emailAppendTo,
+    this.showTitleFieldInLink,
+    this.migrationHash,
+    this.translatedDoctype,
+    this.isCalendarAndGantt,
+    this.quickEntry,
+    this.trackViews,
+    this.queueInBackground,
+    this.allowEventsInTimeline,
+    this.allowAutoRepeat,
+    this.makeAttachmentsPublic,
+    this.forceReRouteToDefaultView,
+    this.showPreviewPopup,
+    this.indexWebPagesForSearch,
+    this.fields,
+    this.permissions,
+    this.links,
+    this.tableFields,
+    this.js,
+    this.listJs,
+    this.customJs,
+    this.customListJs,
+    this.assetsLoaded,
+    this.actions,
+    this.states,
+    this.css,
+    this.calendarJs,
+    this.mapJs,
+    this.linkedWith,
+    this.messages,
+    this.printFormats,
+    this.workflowDocs,
+    this.formGridTemplates,
+    this.listviewTemplate,
+    this.treeJs,
+    this.dashboard,
+    this.kanbanColumnFields,
+    this.templates,
+    this.autoname,
     this.documentType,
+    // New fields from JSON
+    this.isStandard,
+    this.chartName,
+    this.chartType,
+    this.reportName,
+    this.useReportChart,
+    this.numberOfGroups,
     this.isPublic,
-    this.showPercentageStats,
-    this.statsTimeInterval,
+    this.timeseries,
+    this.type,
+    this.showValuesOverChart,
     this.filtersJson,
     this.dynamicFiltersJson,
+    this.yAxis,
+    this.roles,
   });
 
   factory Doc.fromMap(Map<String, dynamic> data) => Doc(
+        fieldsOrder: (data['fields_order'] as List?)?.cast<String>(),
+        doctype: data['doctype'] as String?,
         name: data['name'] as String?,
-        owner: data['owner'] as String?,
         creation: data['creation'] as String?,
         modified: data['modified'] as String?,
         modifiedBy: data['modified_by'] as String?,
+        owner: data['owner'] as String?,
         docstatus: data['docstatus'] as int?,
-        idx: "${data['idx']}" as String?,
-        enabled: data['enabled'] as int?,
-        email: data['email'] as String?,
-        firstName: data['first_name'] as String?,
-        lastName: data['last_name'] as String?,
-        fullName: data['full_name'] as String?,
-        username: data['username'] as String?,
-        language: data['language'] as String?,
-        timeZone: data['time_zone'] as String?,
-        sendWelcomeEmail: data['send_welcome_email'] as int?,
-        unsubscribed: data['unsubscribed'] as int?,
-        muteSounds: data['mute_sounds'] as int?,
-        deskTheme: data['desk_theme'] as String?,
-        searchBar: data['search_bar'] as int?,
-        notifications: data['notifications'] as int?,
-        listSidebar: data['list_sidebar'] as int?,
-        bulkActions: data['bulk_actions'] as int?,
-        viewSwitcher: data['view_switcher'] as int?,
-        formSidebar: data['form_sidebar'] as int?,
-        timeline: data['timeline'] as int?,
-        dashboard: data['dashboard'] as int?,
-        newPassword: data['new_password'] as String?,
-        logoutAllSessions: data['logout_all_sessions'] as int?,
-        documentFollowNotify: data['document_follow_notify'] as int?,
-        documentFollowFrequency: data['document_follow_frequency'] as String?,
-        followCreatedDocuments: data['follow_created_documents'] as int?,
-        followCommentedDocuments: data['follow_commented_documents'] as int?,
-        followLikedDocuments: data['follow_liked_documents'] as int?,
-        followAssignedDocuments: data['follow_assigned_documents'] as int?,
-        followSharedDocuments: data['follow_shared_documents'] as int?,
-        threadNotify: data['thread_notify'] as int?,
-        sendMeACopy: data['send_me_a_copy'] as int?,
-        allowedInMentions: data['allowed_in_mentions'] as int?,
-        simultaneousSessions: data['simultaneous_sessions'] as int?,
-        lastIp: data['last_ip'] as String?,
-        loginAfter: data['login_after'] as int?,
-        userType: data['user_type'] as String?,
-        lastActive: data['last_active'] as String?,
-        loginBefore: data['login_before'] as int?,
-        bypassRestrictIpCheckIf2faEnabled:
-            data['bypass_restrict_ip_check_if_2fa_enabled'] as int?,
-        lastLogin: data['last_login'] as String?,
-        lastKnownVersions: data['last_known_versions'] as String?,
-        onboardingStatus: data['onboarding_status'] as String?,
-        doctype: data['doctype'] as String?,
-        blockModules: data['block_modules'] as List<dynamic>?,
-        roles: (data['roles'] as List<dynamic>?)
-            ?.map((e) => Role.fromMap(e as Map<String, dynamic>))
-            .toList(),
-        userEmails: data['user_emails'] as List<dynamic>?,
-        defaults: data['defaults'] as List<dynamic>?,
-        socialLogins: (data['social_logins'] as List<dynamic>?)
-            ?.map((e) => SocialLogin.fromMap(e as Map<String, dynamic>))
-            .toList(),
-        onload: data['__onload'] == null
-            ? null
-            : Onload.fromMap(data['__onload'] as Map<String, dynamic>),
-        isStandard: data['is_standard'] as int?,
+        idx: data['idx'] as int?,
+        searchFields: data['search_fields'] as String?,
+        issingle: data['issingle'] as int?,
+        isVirtual: data['is_virtual'] as int?,
+        isTree: data['is_tree'] as int?,
+        istable: data['istable'] as int?,
+        editableGrid: data['editable_grid'] as int?,
+        trackChanges: data['track_changes'] as int?,
         module: data['module'] as String?,
-        label: data['label'] as String?,
-        type: data['type'] as String?,
-        function: data['function'] as String?,
-        aggregateFunctionBasedOn:
-            data['aggregate_function_based_on'] as String?,
+        titleField: data['title_field'] as String?,
+        imageField: data['image_field'] as String?,
+        sortField: data['sort_field'] as String?,
+        sortOrder: data['sort_order'] as String?,
+        description: data['description'] as String?,
+        readOnly: data['read_only'] as int?,
+        inCreate: data['in_create'] as int?,
+        allowCopy: data['allow_copy'] as int?,
+        allowRename: data['allow_rename'] as int?,
+        allowImport: data['allow_import'] as int?,
+        hideToolbar: data['hide_toolbar'] as int?,
+        trackSeen: data['track_seen'] as int?,
+        maxAttachments: data['max_attachments'] as int?,
+        icon: data['icon'] as String?,
+        engine: data['engine'] as String?,
+        isSubmittable: data['is_submittable'] as int?,
+        showNameInGlobalSearch: data['show_name_in_global_search'] as int?,
+        custom: data['custom'] as int?,
+        beta: data['beta'] as int?,
+        hasWebView: data['has_web_view'] as int?,
+        allowGuestToView: data['allow_guest_to_view'] as int?,
+        route: data['route'] as String?,
+        emailAppendTo: data['email_append_to'] as int?,
+        showTitleFieldInLink: data['show_title_field_in_link'] as int?,
+        migrationHash: data['migration_hash'] as String?,
+        translatedDoctype: data['translated_doctype'] as int?,
+        isCalendarAndGantt: data['is_calendar_and_gantt'] as int?,
+        quickEntry: data['quick_entry'] as int?,
+        trackViews: data['track_views'] as int?,
+        queueInBackground: data['queue_in_background'] as int?,
+        allowEventsInTimeline: data['allow_events_in_timeline'] as int?,
+        allowAutoRepeat: data['allow_auto_repeat'] as int?,
+        makeAttachmentsPublic: data['make_attachments_public'] as int?,
+        forceReRouteToDefaultView:
+            data['force_re_route_to_default_view'] as int?,
+        showPreviewPopup: data['show_preview_popup'] as int?,
+        indexWebPagesForSearch: data['index_web_pages_for_search'] as int?,
+
+        fields: (data['fields'] as List?)
+            ?.map((e) => Field.fromMap(Map<String, dynamic>.from(e as Map)))
+            .toList(),
+        permissions: (data['permissions'] as List?)
+            ?.map((e) => Permission.fromMap(Map<String, dynamic>.from(e as Map)))
+            .toList(),
+        links: (data['links'] as List?)
+            ?.map((e) => Link.fromMap(Map<String, dynamic>.from(e as Map)))
+            .toList(),
+        tableFields: (data['_table_fields'] as List?)
+            ?.map((e) => TableField.fromMap(Map<String, dynamic>.from(e as Map)))
+            .toList(),
+
+        js: data['__js'] as String?,
+        listJs: data['__list_js'] as String?,
+        customJs: data['__custom_js'] as String?,
+        customListJs: data['__custom_list_js'] as String?,
+        assetsLoaded: data['__assets_loaded'] as bool?,
+        actions: data['actions'] as List<dynamic>?,
+        states: data['states'] as List<dynamic>?,
+        css: data['__css'] as dynamic,
+        calendarJs: data['__calendar_js'] as dynamic,
+        mapJs: data['__map_js'] as dynamic,
+        linkedWith: data['__linked_with'] as dynamic,
+        messages: data['__messages'] as dynamic,
+        printFormats: data['__print_formats'] as List<dynamic>?,
+        workflowDocs: data['__workflow_docs'] as List<dynamic>?,
+        formGridTemplates: data['__form_grid_templates'] as dynamic,
+        listviewTemplate: data['__listview_template'] as dynamic,
+        treeJs: data['__tree_js'] as dynamic,
+
+        dashboard: data['__dashboard'] == null
+            ? null
+            : Dashboard.fromMap(Map<String, dynamic>.from(data['__dashboard'] as Map)),
+
+        kanbanColumnFields: data['__kanban_column_fields'] as List<dynamic>?,
+        templates: data['__templates'] as dynamic,
+        autoname: data['autoname'] as String?,
         documentType: data['document_type'] as String?,
+
+        // Mapping new JSON fields
+        isStandard: data['is_standard'] as int?,
+        chartName: data['chart_name'] as String?,
+        chartType: data['chart_type'] as String?,
+        reportName: data['report_name'] as String?,
+        useReportChart: data['use_report_chart'] as int?,
+        numberOfGroups: data['number_of_groups'] as int?,
         isPublic: data['is_public'] as int?,
-        showPercentageStats: data['show_percentage_stats'] as int?,
-        statsTimeInterval: data['stats_time_interval'] as String?,
+        timeseries: data['timeseries'] as int?,
+        type: data['type'] as String?,
+        showValuesOverChart: data['show_values_over_chart'] as int?,
         filtersJson: data['filters_json'] as String?,
         dynamicFiltersJson: data['dynamic_filters_json'] as String?,
+        yAxis: data['y_axis'] as List<dynamic>?,
+        roles: data['roles'] as List<dynamic>?,
       );
 
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [Doc].
   factory Doc.fromJson(String data) {
-    return Doc.fromMap(json.decode(data) as Map<String, dynamic>);
+    return Doc.fromMap(Map<String, dynamic>.from(json.decode(data) as Map));
   }
+
+  // Properties
+  String? doctype;
   String? name;
-  String? owner;
   String? creation;
   String? modified;
   String? modifiedBy;
+  String? owner;
   int? docstatus;
-  String? idx;
-  int? enabled;
-  String? email;
-  String? firstName;
-  String? lastName;
-  String? fullName;
-  String? username;
-  String? language;
-  String? timeZone;
-  int? sendWelcomeEmail;
-  int? unsubscribed;
-  int? muteSounds;
-  String? deskTheme;
-  int? searchBar;
-  int? notifications;
-  int? listSidebar;
-  int? bulkActions;
-  int? viewSwitcher;
-  int? formSidebar;
-  int? timeline;
-  int? dashboard;
-  String? newPassword;
-  int? logoutAllSessions;
-  int? documentFollowNotify;
-  String? documentFollowFrequency;
-  int? followCreatedDocuments;
-  int? followCommentedDocuments;
-  int? followLikedDocuments;
-  int? followAssignedDocuments;
-  int? followSharedDocuments;
-  int? threadNotify;
-  int? sendMeACopy;
-  int? allowedInMentions;
-  int? simultaneousSessions;
-  String? lastIp;
-  int? loginAfter;
-  String? userType;
-  String? lastActive;
-  int? loginBefore;
-  int? bypassRestrictIpCheckIf2faEnabled;
-  String? lastLogin;
-  String? lastKnownVersions;
-  String? onboardingStatus;
-  String? doctype;
-  List<dynamic>? blockModules;
-  List<Role>? roles;
-  List<dynamic>? userEmails;
-  List<dynamic>? defaults;
-  List<SocialLogin>? socialLogins;
-  Onload? onload;
-  int? isStandard;
+  int? idx;
+  List<String>? fieldsOrder;
+  String? searchFields;
+  int? issingle;
+  int? isVirtual;
+  int? isTree;
+  int? istable;
+  int? editableGrid;
+  int? trackChanges;
   String? module;
-  String? label;
-  String? type;
-  String? function;
-  String? aggregateFunctionBasedOn;
+  String? titleField;
+  String? imageField;
+  String? sortField;
+  String? sortOrder;
+  String? description;
+  int? readOnly;
+  int? inCreate;
+  int? allowCopy;
+  int? allowRename;
+  int? allowImport;
+  int? hideToolbar;
+  int? trackSeen;
+  int? maxAttachments;
+  String? icon;
+  String? engine;
+  int? isSubmittable;
+  int? showNameInGlobalSearch;
+  int? custom;
+  int? beta;
+  int? hasWebView;
+  int? allowGuestToView;
+  String? route;
+  int? emailAppendTo;
+  int? showTitleFieldInLink;
+  String? migrationHash;
+  int? translatedDoctype;
+  int? isCalendarAndGantt;
+  int? quickEntry;
+  int? trackViews;
+  int? queueInBackground;
+  int? allowEventsInTimeline;
+  int? allowAutoRepeat;
+  int? makeAttachmentsPublic;
+  int? forceReRouteToDefaultView;
+  int? showPreviewPopup;
+  int? indexWebPagesForSearch;
+  List<Field>? fields;
+  List<Permission>? permissions;
+  List<Link>? links;
+  List<TableField>? tableFields;
+  String? js;
+  String? listJs;
+  String? customJs;
+  String? customListJs;
+  bool? assetsLoaded;
+  List<dynamic>? actions;
+  List<dynamic>? states;
+  dynamic css;
+  dynamic calendarJs;
+  dynamic mapJs;
+  dynamic linkedWith;
+  dynamic messages;
+  List<dynamic>? printFormats;
+  List<dynamic>? workflowDocs;
+  dynamic formGridTemplates;
+  dynamic listviewTemplate;
+  dynamic treeJs;
+  Dashboard? dashboard;
+  List<dynamic>? kanbanColumnFields;
+  dynamic templates;
+  String? autoname;
   String? documentType;
+
+  // New Property declarations
+  int? isStandard;
+  String? chartName;
+  String? chartType;
+  String? reportName;
+  int? useReportChart;
+  int? numberOfGroups;
   int? isPublic;
-  int? showPercentageStats;
-  String? statsTimeInterval;
+  int? timeseries;
+  String? type;
+  int? showValuesOverChart;
   String? filtersJson;
   String? dynamicFiltersJson;
-  String? lastSyncOn;
+  List<dynamic>? yAxis;
+  List<dynamic>? roles;
 
   Map<String, dynamic> toMap() => {
+        'doctype': doctype,
+        'fields_order': fieldsOrder,
         'name': name,
-        'owner': owner,
         'creation': creation,
         'modified': modified,
         'modified_by': modifiedBy,
+        'owner': owner,
         'docstatus': docstatus,
         'idx': idx,
-        'enabled': enabled,
-        'email': email,
-        'first_name': firstName,
-        'last_name': lastName,
-        'full_name': fullName,
-        'username': username,
-        'language': language,
-        'time_zone': timeZone,
-        'send_welcome_email': sendWelcomeEmail,
-        'unsubscribed': unsubscribed,
-        'mute_sounds': muteSounds,
-        'desk_theme': deskTheme,
-        'search_bar': searchBar,
-        'notifications': notifications,
-        'list_sidebar': listSidebar,
-        'bulk_actions': bulkActions,
-        'view_switcher': viewSwitcher,
-        'form_sidebar': formSidebar,
-        'timeline': timeline,
-        'dashboard': dashboard,
-        'new_password': newPassword,
-        'logout_all_sessions': logoutAllSessions,
-        'document_follow_notify': documentFollowNotify,
-        'document_follow_frequency': documentFollowFrequency,
-        'follow_created_documents': followCreatedDocuments,
-        'follow_commented_documents': followCommentedDocuments,
-        'follow_liked_documents': followLikedDocuments,
-        'follow_assigned_documents': followAssignedDocuments,
-        'follow_shared_documents': followSharedDocuments,
-        'thread_notify': threadNotify,
-        'send_me_a_copy': sendMeACopy,
-        'allowed_in_mentions': allowedInMentions,
-        'simultaneous_sessions': simultaneousSessions,
-        'last_ip': lastIp,
-        'login_after': loginAfter,
-        'user_type': userType,
-        'last_active': lastActive,
-        'login_before': loginBefore,
-        'bypass_restrict_ip_check_if_2fa_enabled':
-            bypassRestrictIpCheckIf2faEnabled,
-        'last_login': lastLogin,
-        'last_known_versions': lastKnownVersions,
-        'onboarding_status': onboardingStatus,
-        'doctype': doctype,
-        'block_modules': blockModules,
-        'roles': roles?.map((e) => e.toMap()).toList(),
-        'user_emails': userEmails,
-        'defaults': defaults,
-        'social_logins': socialLogins?.map((e) => e.toMap()).toList(),
-        '__onload': onload?.toMap(),
-        'is_standard': isStandard,
+        'search_fields': searchFields,
+        'issingle': issingle,
+        'is_virtual': isVirtual,
+        'is_tree': isTree,
+        'istable': istable,
+        'editable_grid': editableGrid,
+        'track_changes': trackChanges,
         'module': module,
-        'label': label,
-        'type': type,
-        'function': function,
-        'aggregate_function_based_on': aggregateFunctionBasedOn,
+        'title_field': titleField,
+        'image_field': imageField,
+        'sort_field': sortField,
+        'sort_order': sortOrder,
+        'description': description,
+        'read_only': readOnly,
+        'in_create': inCreate,
+        'allow_copy': allowCopy,
+        'allow_rename': allowRename,
+        'allow_import': allowImport,
+        'hide_toolbar': hideToolbar,
+        'track_seen': trackSeen,
+        'max_attachments': maxAttachments,
+        'icon': icon,
+        'engine': engine,
+        'is_submittable': isSubmittable,
+        'show_name_in_global_search': showNameInGlobalSearch,
+        'custom': custom,
+        'beta': beta,
+        'has_web_view': hasWebView,
+        'allow_guest_to_view': allowGuestToView,
+        'route': route,
+        'email_append_to': emailAppendTo,
+        'show_title_field_in_link': showTitleFieldInLink,
+        'migration_hash': migrationHash,
+        'translated_doctype': translatedDoctype,
+        'is_calendar_and_gantt': isCalendarAndGantt,
+        'quick_entry': quickEntry,
+        'track_views': trackViews,
+        'queue_in_background': queueInBackground,
+        'allow_events_in_timeline': allowEventsInTimeline,
+        'allow_auto_repeat': allowAutoRepeat,
+        'make_attachments_public': makeAttachmentsPublic,
+        'force_re_route_to_default_view': forceReRouteToDefaultView,
+        'show_preview_popup': showPreviewPopup,
+        'index_web_pages_for_search': indexWebPagesForSearch,
+        'fields': fields?.map((e) => e.toMap()).toList(),
+        'permissions': permissions?.map((e) => e.toMap()).toList(),
+        'links': links?.map((e) => e.toMap()).toList(),
+        '_table_fields': tableFields?.map((e) => e.toMap()).toList(),
+        '__js': js,
+        '__list_js': listJs,
+        '__custom_js': customJs,
+        '__custom_list_js': customListJs,
+        '__assets_loaded': assetsLoaded,
+        'actions': actions,
+        'states': states,
+        '__css': css,
+        '__calendar_js': calendarJs,
+        '__map_js': mapJs,
+        '__linked_with': linkedWith,
+        '__messages': messages,
+        '__print_formats': printFormats,
+        '__workflow_docs': workflowDocs,
+        '__form_grid_templates': formGridTemplates,
+        '__listview_template': listviewTemplate,
+        '__tree_js': treeJs,
+        '__dashboard': dashboard?.toMap(),
+        '__kanban_column_fields': kanbanColumnFields,
+        '__templates': templates,
+        'autoname': autoname,
         'document_type': documentType,
+        // Mapping new fields back to JSON
+        'is_standard': isStandard,
+        'chart_name': chartName,
+        'chart_type': chartType,
+        'report_name': reportName,
+        'use_report_chart': useReportChart,
+        'number_of_groups': numberOfGroups,
         'is_public': isPublic,
-        'show_percentage_stats': showPercentageStats,
-        'stats_time_interval': statsTimeInterval,
+        'timeseries': timeseries,
+        'type': type,
+        'show_values_over_chart': showValuesOverChart,
         'filters_json': filtersJson,
         'dynamic_filters_json': dynamicFiltersJson,
+        'y_axis': yAxis,
+        'roles': roles,
       };
 
-  /// `dart:convert`
-  ///
-  /// Converts [Doc] to a JSON string.
   String toJson() => json.encode(toMap());
 }
