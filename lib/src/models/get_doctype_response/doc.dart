@@ -87,10 +87,24 @@ class Doc {
     this.templates,
     this.autoname,
     this.documentType,
+    // New fields from JSON
+    this.isStandard,
+    this.chartName,
+    this.chartType,
+    this.reportName,
+    this.useReportChart,
+    this.numberOfGroups,
+    this.isPublic,
+    this.timeseries,
+    this.type,
+    this.showValuesOverChart,
+    this.filtersJson,
+    this.dynamicFiltersJson,
+    this.yAxis,
+    this.roles,
   });
 
   factory Doc.fromMap(Map<String, dynamic> data) => Doc(
-        // Use .cast<String>() for simple string lists
         fieldsOrder: (data['fields_order'] as List?)?.cast<String>(),
         doctype: data['doctype'] as String?,
         name: data['name'] as String?,
@@ -146,7 +160,6 @@ class Doc {
         showPreviewPopup: data['show_preview_popup'] as int?,
         indexWebPagesForSearch: data['index_web_pages_for_search'] as int?,
 
-        // FIXED: Using Map<String, dynamic>.from for nested List objects
         fields: (data['fields'] as List?)
             ?.map((e) => Field.fromMap(Map<String, dynamic>.from(e as Map)))
             .toList(),
@@ -178,7 +191,6 @@ class Doc {
         listviewTemplate: data['__listview_template'] as dynamic,
         treeJs: data['__tree_js'] as dynamic,
 
-        // FIXED: dashboard map parsing
         dashboard: data['__dashboard'] == null
             ? null
             : Dashboard.fromMap(Map<String, dynamic>.from(data['__dashboard'] as Map)),
@@ -187,13 +199,29 @@ class Doc {
         templates: data['__templates'] as dynamic,
         autoname: data['autoname'] as String?,
         documentType: data['document_type'] as String?,
+
+        // Mapping new JSON fields
+        isStandard: data['is_standard'] as int?,
+        chartName: data['chart_name'] as String?,
+        chartType: data['chart_type'] as String?,
+        reportName: data['report_name'] as String?,
+        useReportChart: data['use_report_chart'] as int?,
+        numberOfGroups: data['number_of_groups'] as int?,
+        isPublic: data['is_public'] as int?,
+        timeseries: data['timeseries'] as int?,
+        type: data['type'] as String?,
+        showValuesOverChart: data['show_values_over_chart'] as int?,
+        filtersJson: data['filters_json'] as String?,
+        dynamicFiltersJson: data['dynamic_filters_json'] as String?,
+        yAxis: data['y_axis'] as List<dynamic>?,
+        roles: data['roles'] as List<dynamic>?,
       );
 
   factory Doc.fromJson(String data) {
-    // FIXED: Ensure root map is typed correctly
     return Doc.fromMap(Map<String, dynamic>.from(json.decode(data) as Map));
   }
 
+  // Properties
   String? doctype;
   String? name;
   String? creation;
@@ -273,6 +301,22 @@ class Doc {
   dynamic templates;
   String? autoname;
   String? documentType;
+
+  // New Property declarations
+  int? isStandard;
+  String? chartName;
+  String? chartType;
+  String? reportName;
+  int? useReportChart;
+  int? numberOfGroups;
+  int? isPublic;
+  int? timeseries;
+  String? type;
+  int? showValuesOverChart;
+  String? filtersJson;
+  String? dynamicFiltersJson;
+  List<dynamic>? yAxis;
+  List<dynamic>? roles;
 
   Map<String, dynamic> toMap() => {
         'doctype': doctype,
@@ -354,6 +398,21 @@ class Doc {
         '__templates': templates,
         'autoname': autoname,
         'document_type': documentType,
+        // Mapping new fields back to JSON
+        'is_standard': isStandard,
+        'chart_name': chartName,
+        'chart_type': chartType,
+        'report_name': reportName,
+        'use_report_chart': useReportChart,
+        'number_of_groups': numberOfGroups,
+        'is_public': isPublic,
+        'timeseries': timeseries,
+        'type': type,
+        'show_values_over_chart': showValuesOverChart,
+        'filters_json': filtersJson,
+        'dynamic_filters_json': dynamicFiltersJson,
+        'y_axis': yAxis,
+        'roles': roles,
       };
 
   String toJson() => json.encode(toMap());
