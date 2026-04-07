@@ -130,18 +130,6 @@ class FrappeV15 implements FrappeApi {
     }
   }
 
-  // Helper method to extract user ID from cookies
-  // String? _extractUserIdFromCookies(String cookies) {
-  //   final cookieParts = cookies.split(';');
-  //   for (final part in cookieParts) {
-  //     if (part.trim().startsWith('SameSite=Lax,user_id=')) {
-  //       return Uri.decodeComponent(
-  //         part.trim().substring('SameSite=Lax,user_id='.length),
-  //       );
-  //     }
-  //   }
-  //   return null;
-  // }
 
   @override
   Future<DeskSidebarItemsResponse> getDeskSideBarItems() async {
@@ -596,6 +584,32 @@ class FrappeV15 implements FrappeApi {
       );
     }
   }
+  @override
+  Future<Map<String, dynamic>> getSessionDefaultValues() async {
+    final url = '$_baseUrl/api/method/frappe.core.doctype.session_default_settings.session_default_settings.get_session_default_values';
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        url,
+        options: Options(headers: {if (cookie != null) 'Cookie': cookie}),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data??{};
+      } else {
+        throw Exception(
+          'Failed to get session default values. Response Status: ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception(
+        '''An unknown error occurred while retrieving session default values: $e''',
+      );
+    }
+  }
+
 
   @override
   Future<AppsResponse> getApps() async {
