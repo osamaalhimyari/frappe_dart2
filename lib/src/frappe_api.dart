@@ -26,6 +26,11 @@ abstract class FrappeApi {
   /// Returns a [Map<String, dynamic>] containing the session default values.
   Future<Map<String, dynamic>> getSessionDefaultValues();
 
+  /// Retrieves the notifications values.
+  ///
+  /// Returns a [Map<String, dynamic>] containing the session default values.
+  Future<Map<String, dynamic>> notificationsLog();
+
   /// Retrieves the desk sidebar items.
   ///
   /// Returns a [DeskSidebarItemsResponse] with the list of sidebar items.

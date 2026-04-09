@@ -610,6 +610,32 @@ class FrappeV15 implements FrappeApi {
     }
   }
 
+  @override
+  Future<Map<String, dynamic>> notificationsLog() async {
+    final url = '$_baseUrl/api/method/frappe.desk.doctype.notification_log.notification_log.get_notification_logs';
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        url,
+        options: Options(headers: {if (cookie != null) 'Cookie': cookie}),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data??{};
+      } else {
+        throw Exception(
+          'Failed to get notification logs. Response Status: ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception(
+        '''An unknown error occurred while retrieving notification logs: $e''',
+      );
+    }
+  }
+
 
   @override
   Future<AppsResponse> getApps() async {
