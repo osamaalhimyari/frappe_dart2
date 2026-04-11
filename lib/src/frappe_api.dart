@@ -57,6 +57,11 @@ abstract class FrappeApi {
 
   /// Retrieves details of a specific doctype.
   ///
+  /// Takes the [doctype] as a parameter and returns an [Map<String, dynamic>].
+  Future<Map<String, dynamic>> getFieldsForTable(String doctype);
+ 
+  /// Retrieves details of a specific doctype.
+  ///
   /// Takes the [doctype] as a parameter and returns an [GetDoctypeResponse].
   Future<GetDoctypeResponse> getDoctype(String doctype);
 

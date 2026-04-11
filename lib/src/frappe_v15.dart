@@ -269,6 +269,36 @@ class FrappeV15 implements FrappeApi {
   }
 
   @override
+  Future<Map<String, dynamic>> getFieldsForTable(String doctype) async {
+    final url =
+        '$_baseUrl/api/resource/DocType/$doctype';
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            if (cookie != null) 'Cookie': cookie,
+          },
+        ),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data??{};
+      } else {
+        throw Exception(
+          'Failed to get doc. Response Status: ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('''An unknown error occurred while retrieving doc: $e''');
+    }
+  }
+
+  //
+  @override
   Future<GetDoctypeResponse> getDoctype(String doctype) async {
     final url =
         '$_baseUrl/api/method/frappe.desk.form.load.getdoctype?doctype=$doctype&with_parent=1';
