@@ -71,6 +71,12 @@ abstract class FrappeApi {
   Future<GetDocResponse> getdoc(String doctype, String name);
 
   ///
+  /// Retrieves a document by doctype and name.
+  ///
+  /// Takes [doctype] and [name] as parameters and returns a [Map<String,dynamic>].
+  Future<Map<String,dynamic>> getdocData(String doctype, String name);
+
+  ///
   Future<GetCountResponse> getCount(GetCountRequest getCountRequest);
 
   /// Saves documents.

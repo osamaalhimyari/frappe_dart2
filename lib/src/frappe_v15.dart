@@ -411,6 +411,34 @@ class FrappeV15 implements FrappeApi {
       throw Exception('''An unknown error occurred while retrieving doc: $e''');
     }
   }
+  @override
+  Future<Map<String,dynamic>> getdocData(String doctype, String name) async {
+    final url = '$_baseUrl/api/resource/$doctype/$name';
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            if (cookie != null) 'Cookie': cookie,
+          },
+        ),
+        data: {'doctype': doctype, 'name': name},
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return (response.data!);
+      } else {
+        throw Exception(
+          'Failed to get doc. Response Status: ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('''An unknown error occurred while retrieving doc: $e''');
+    }
+  }
 
   @override
   Future<GetCountResponse> getCount(GetCountRequest getCountRequest) async {
