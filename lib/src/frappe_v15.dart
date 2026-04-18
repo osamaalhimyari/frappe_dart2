@@ -415,7 +415,7 @@ class FrappeV15 implements FrappeApi {
   Future<Map<String,dynamic>> getdocData(String doctype, String name) async {
     final url = '$_baseUrl/api/resource/$doctype/$name';
     try {
-      final response = await _dio.post<Map<String, dynamic>>(
+      final response = await _dio.get<Map<String, dynamic>>(
         url,
         options: Options(
           headers: {
@@ -423,7 +423,7 @@ class FrappeV15 implements FrappeApi {
             if (cookie != null) 'Cookie': cookie,
           },
         ),
-        data: {'doctype': doctype, 'name': name},
+        // data: {'doctype': doctype, 'name': name},
       );
 
       if (response.statusCode == HttpStatus.ok) {
