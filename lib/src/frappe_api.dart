@@ -239,4 +239,215 @@ abstract class FrappeApi {
     required Map<String, dynamic> data,
     required String method,
   });
+
+  // ===========================================================================
+  // Token auth
+  // ===========================================================================
+
+  /// Enables API-key / API-secret authentication.
+  ///
+  /// Sets an `Authorization: token <apiKey>:<apiSecret>` header on every
+  /// request. Call with both `null` to clear and fall back to cookie auth.
+  void setApiToken({String? apiKey, String? apiSecret});
+
+  // ===========================================================================
+  // Client CRUD parity (frappe.client.*)
+  // ===========================================================================
+
+  /// Inserts a new document. Wraps `frappe.client.insert`.
+  Future<Map<String, dynamic>> insert(Map<String, dynamic> doc);
+
+  /// Inserts up to 200 documents in a single request.
+  /// Wraps `frappe.client.insert_many`.
+  Future<Map<String, dynamic>> insertMany(List<Map<String, dynamic>> docs);
+
+  /// Updates one or more fields on a document.
+  ///
+  /// Pass [fieldname] as a `String` for a single field, or a `Map` for many.
+  /// Wraps `frappe.client.set_value`.
+  Future<Map<String, dynamic>> setValue({
+    required String doctype,
+    required String name,
+    required Object fieldname,
+    Object? value,
+  });
+
+  /// Updates many documents in a single request.
+  /// Wraps `frappe.client.bulk_update`.
+  Future<Map<String, dynamic>> bulkUpdate(List<Map<String, dynamic>> docs);
+
+  /// Renames a document, optionally merging into an existing record.
+  /// Wraps `frappe.client.rename_doc`.
+  Future<Map<String, dynamic>> renameDoc({
+    required String doctype,
+    required String oldName,
+    required String newName,
+    bool merge = false,
+  });
+
+  /// Submits a document. Wraps `frappe.client.submit`.
+  Future<Map<String, dynamic>> submit(Map<String, dynamic> doc);
+
+  /// Cancels a submitted document. Wraps `frappe.client.cancel`.
+  Future<Map<String, dynamic>> cancel({
+    required String doctype,
+    required String name,
+  });
+
+  /// Reads a single field from a Single doctype.
+  /// Wraps `frappe.client.get_single_value`.
+  Future<Map<String, dynamic>> getSingleValue({
+    required String doctype,
+    required String field,
+  });
+
+  /// Checks whether the current user has the requested permission.
+  /// Wraps `frappe.client.has_permission`.
+  Future<Map<String, dynamic>> hasPermission({
+    required String doctype,
+    required String docname,
+    String permType = 'read',
+  });
+
+  /// Reads a password field. System Manager only.
+  /// Wraps `frappe.client.get_password`.
+  Future<Map<String, dynamic>> getPassword({
+    required String doctype,
+    required String name,
+    required String fieldname,
+  });
+
+  // ===========================================================================
+  // Files
+  // ===========================================================================
+
+  /// Uploads bytes to Frappe's File doctype.
+  ///
+  /// When [doctype], [docname] and [fieldname] are supplied, the resulting
+  /// file is attached to that field. Wraps `/api/method/upload_file`.
+  Future<Map<String, dynamic>> uploadFile({
+    required List<int> fileBytes,
+    required String fileName,
+    String? doctype,
+    String? docname,
+    String? fieldname,
+    bool isPrivate = false,
+    String? folder,
+    bool optimize = false,
+  });
+
+  /// Downloads file bytes from a `/files/...` or `/private/files/...` URL.
+  Future<List<int>> downloadFile(String fileUrl);
+
+  // ===========================================================================
+  // Collaboration: assignments, comments, tags, share
+  // ===========================================================================
+
+  /// Assigns a doc to one or more users.
+  /// Wraps `frappe.desk.form.assign_to.add`.
+  Future<Map<String, dynamic>> assignTo({
+    required List<String> assignTo,
+    required String doctype,
+    required String name,
+    String? description,
+    String? priority,
+    String? dateOfAssignment,
+    bool notify = false,
+  });
+
+  /// Removes an assignment from a doc.
+  /// Wraps `frappe.desk.form.assign_to.remove`.
+  Future<Map<String, dynamic>> removeAssign({
+    required String doctype,
+    required String name,
+    required String assignTo,
+  });
+
+  /// Adds a comment to a doc.
+  /// Wraps `frappe.desk.form.utils.add_comment`.
+  Future<Map<String, dynamic>> addComment({
+    required String referenceDoctype,
+    required String referenceName,
+    required String content,
+    String? commentEmail,
+    String? commentBy,
+  });
+
+  /// Adds a tag to a doc.
+  /// Wraps `frappe.desk.doctype.tag.tag.add_tag`.
+  Future<Map<String, dynamic>> addTag({
+    required String tag,
+    required String doctype,
+    required String docname,
+  });
+
+  /// Removes a tag from a doc.
+  /// Wraps `frappe.desk.doctype.tag.tag.remove_tag`.
+  Future<Map<String, dynamic>> removeTag({
+    required String tag,
+    required String doctype,
+    required String docname,
+  });
+
+  /// Shares a doc with a user. Wraps `frappe.share.add`.
+  Future<Map<String, dynamic>> shareAdd({
+    required String doctype,
+    required String name,
+    required String user,
+    bool read = true,
+    bool write = false,
+    bool share = false,
+    bool everyone = false,
+    bool notify = false,
+  });
+
+  /// Removes a share. Wraps `frappe.share.remove`.
+  Future<Map<String, dynamic>> shareRemove({
+    required String doctype,
+    required String name,
+    required String user,
+  });
+
+  // ===========================================================================
+  // Workflow
+  // ===========================================================================
+
+  /// Applies a workflow action to a document.
+  /// Wraps `frappe.model.workflow.apply_workflow`.
+  Future<Map<String, dynamic>> applyWorkflow({
+    required Map<String, dynamic> doc,
+    required String action,
+  });
+
+  /// Lists workflow transitions available for the doc.
+  /// Wraps `frappe.model.workflow.get_transitions`.
+  Future<Map<String, dynamic>> getWorkflowTransitions(
+    Map<String, dynamic> doc,
+  );
+
+  // ===========================================================================
+  // Print / PDF
+  // ===========================================================================
+
+  /// Downloads a PDF rendered with a print format.
+  /// Wraps `frappe.utils.print_format.download_pdf`.
+  Future<List<int>> downloadPdf({
+    required String doctype,
+    required String name,
+    String format = 'Standard',
+    bool noLetterhead = false,
+    String? lang,
+    String? letterhead,
+  });
+
+  /// Returns rendered print HTML + style for a doc.
+  /// Wraps `frappe.www.printview.get_html_and_style`.
+  Future<Map<String, dynamic>> getPrintHtml({
+    required String doctype,
+    required String name,
+    String format = 'Standard',
+    bool noLetterhead = false,
+    String? lang,
+    String? letterhead,
+  });
 }

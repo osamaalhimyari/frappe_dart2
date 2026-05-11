@@ -18,14 +18,31 @@ class FrappeV15 implements FrappeApi {
     String? siteName,
     Dio? dio,
     String? cookie,
+    String? apiKey,
+    String? apiSecret,
   })  : _baseUrl = baseUrl,
         _siteName = siteName ?? '',
         _cookie = cookie,
-        _dio = dio ?? Dio();
+        _apiKey = apiKey,
+        _apiSecret = apiSecret,
+        _dio = dio ?? Dio() {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (_apiKey != null && _apiSecret != null) {
+            options.headers['Authorization'] = 'token $_apiKey:$_apiSecret';
+          }
+          handler.next(options);
+        },
+      ),
+    );
+  }
 
   String _baseUrl;
   String _siteName;
   String? _cookie;
+  String? _apiKey;
+  String? _apiSecret;
   final Dio _dio;
 
   // Realtime client instance
@@ -1188,6 +1205,480 @@ class FrappeV15 implements FrappeApi {
       throw Exception(handleDioError(e));
     } catch (e) {
       throw Exception('An error occurred while running doc method: $e');
+    }
+  }
+
+  // ===========================================================================
+  // Token auth
+  // ===========================================================================
+
+  @override
+  void setApiToken({String? apiKey, String? apiSecret}) {
+    _apiKey = apiKey;
+    _apiSecret = apiSecret;
+  }
+
+  /// Builds the Cookie/Authorization headers used by request helpers.
+  ///
+  /// The Dio interceptor already injects the `Authorization` header for
+  /// API-key/secret auth; this helper just keeps existing cookie behaviour
+  /// for the new methods.
+  Map<String, String> _authHeaders([Map<String, String>? extra]) {
+    return {
+      if (_cookie != null) 'Cookie': _cookie!,
+      if (extra != null) ...extra,
+    };
+  }
+
+  Future<Map<String, dynamic>> _postForm(
+    String method,
+    Map<String, dynamic> body,
+  ) async {
+    final url = '$_baseUrl/api/method/$method';
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        url,
+        options: Options(
+          headers: _authHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }),
+        ),
+        data: body,
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? <String, dynamic>{};
+      }
+      throw Exception(
+        'Failed to call $method. Status: ${response.statusCode}, '
+        'data: ${response.data}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An unknown error occurred while calling $method: $e');
+    }
+  }
+
+  // ===========================================================================
+  // Client CRUD parity
+  // ===========================================================================
+
+  @override
+  Future<Map<String, dynamic>> insert(Map<String, dynamic> doc) {
+    return _postForm('frappe.client.insert', {'doc': json.encode(doc)});
+  }
+
+  @override
+  Future<Map<String, dynamic>> insertMany(
+    List<Map<String, dynamic>> docs,
+  ) {
+    return _postForm(
+      'frappe.client.insert_many',
+      {'docs': json.encode(docs)},
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> setValue({
+    required String doctype,
+    required String name,
+    required Object fieldname,
+    Object? value,
+  }) {
+    return _postForm('frappe.client.set_value', {
+      'doctype': doctype,
+      'name': name,
+      'fieldname':
+          fieldname is String ? fieldname : json.encode(fieldname),
+      if (value != null) 'value': value is String ? value : json.encode(value),
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> bulkUpdate(List<Map<String, dynamic>> docs) {
+    return _postForm(
+      'frappe.client.bulk_update',
+      {'docs': json.encode(docs)},
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> renameDoc({
+    required String doctype,
+    required String oldName,
+    required String newName,
+    bool merge = false,
+  }) {
+    return _postForm('frappe.client.rename_doc', {
+      'doctype': doctype,
+      'old_name': oldName,
+      'new_name': newName,
+      'merge': merge ? 1 : 0,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> submit(Map<String, dynamic> doc) {
+    return _postForm('frappe.client.submit', {'doc': json.encode(doc)});
+  }
+
+  @override
+  Future<Map<String, dynamic>> cancel({
+    required String doctype,
+    required String name,
+  }) {
+    return _postForm('frappe.client.cancel', {
+      'doctype': doctype,
+      'name': name,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> getSingleValue({
+    required String doctype,
+    required String field,
+  }) async {
+    final url = '$_baseUrl/api/method/frappe.client.get_single_value'
+        '?doctype=${Uri.encodeQueryComponent(doctype)}'
+        '&field=${Uri.encodeQueryComponent(field)}';
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        url,
+        options: Options(headers: _authHeaders()),
+      );
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? <String, dynamic>{};
+      }
+      throw Exception(
+        'Failed to get single value. Status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while getting single value: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> hasPermission({
+    required String doctype,
+    required String docname,
+    String permType = 'read',
+  }) {
+    return _postForm('frappe.client.has_permission', {
+      'doctype': doctype,
+      'docname': docname,
+      'perm_type': permType,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPassword({
+    required String doctype,
+    required String name,
+    required String fieldname,
+  }) {
+    return _postForm('frappe.client.get_password', {
+      'doctype': doctype,
+      'name': name,
+      'fieldname': fieldname,
+    });
+  }
+
+  // ===========================================================================
+  // Files
+  // ===========================================================================
+
+  @override
+  Future<Map<String, dynamic>> uploadFile({
+    required List<int> fileBytes,
+    required String fileName,
+    String? doctype,
+    String? docname,
+    String? fieldname,
+    bool isPrivate = false,
+    String? folder,
+    bool optimize = false,
+  }) async {
+    final url = '$_baseUrl/api/method/upload_file';
+    try {
+      final formData = FormData.fromMap({
+        'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+        'file_name': fileName,
+        'is_private': isPrivate ? 1 : 0,
+        if (doctype != null) 'doctype': doctype,
+        if (docname != null) 'docname': docname,
+        if (fieldname != null) 'fieldname': fieldname,
+        if (folder != null) 'folder': folder,
+        if (optimize) 'optimize': 1,
+      });
+
+      final response = await _dio.post<Map<String, dynamic>>(
+        url,
+        data: formData,
+        options: Options(headers: _authHeaders()),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? <String, dynamic>{};
+      }
+      throw Exception(
+        'Failed to upload file. Status: ${response.statusCode}, '
+        'data: ${response.data}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while uploading file: $e');
+    }
+  }
+
+  @override
+  Future<List<int>> downloadFile(String fileUrl) async {
+    final url = fileUrl.startsWith('http') ? fileUrl : '$_baseUrl$fileUrl';
+    try {
+      final response = await _dio.get<List<int>>(
+        url,
+        options: Options(
+          headers: _authHeaders(),
+          responseType: ResponseType.bytes,
+        ),
+      );
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? const <int>[];
+      }
+      throw Exception(
+        'Failed to download file. Status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while downloading file: $e');
+    }
+  }
+
+  // ===========================================================================
+  // Collaboration
+  // ===========================================================================
+
+  @override
+  Future<Map<String, dynamic>> assignTo({
+    required List<String> assignTo,
+    required String doctype,
+    required String name,
+    String? description,
+    String? priority,
+    String? dateOfAssignment,
+    bool notify = false,
+  }) {
+    return _postForm('frappe.desk.form.assign_to.add', {
+      'assign_to': json.encode(assignTo),
+      'doctype': doctype,
+      'name': name,
+      if (description != null) 'description': description,
+      if (priority != null) 'priority': priority,
+      if (dateOfAssignment != null) 'date': dateOfAssignment,
+      'notify': notify ? 1 : 0,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> removeAssign({
+    required String doctype,
+    required String name,
+    required String assignTo,
+  }) {
+    return _postForm('frappe.desk.form.assign_to.remove', {
+      'doctype': doctype,
+      'name': name,
+      'assign_to': assignTo,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> addComment({
+    required String referenceDoctype,
+    required String referenceName,
+    required String content,
+    String? commentEmail,
+    String? commentBy,
+  }) {
+    return _postForm('frappe.desk.form.utils.add_comment', {
+      'reference_doctype': referenceDoctype,
+      'reference_name': referenceName,
+      'content': content,
+      if (commentEmail != null) 'comment_email': commentEmail,
+      if (commentBy != null) 'comment_by': commentBy,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> addTag({
+    required String tag,
+    required String doctype,
+    required String docname,
+  }) {
+    return _postForm('frappe.desk.doctype.tag.tag.add_tag', {
+      'tag': tag,
+      'dt': doctype,
+      'dn': docname,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> removeTag({
+    required String tag,
+    required String doctype,
+    required String docname,
+  }) {
+    return _postForm('frappe.desk.doctype.tag.tag.remove_tag', {
+      'tag': tag,
+      'dt': doctype,
+      'dn': docname,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> shareAdd({
+    required String doctype,
+    required String name,
+    required String user,
+    bool read = true,
+    bool write = false,
+    bool share = false,
+    bool everyone = false,
+    bool notify = false,
+  }) {
+    return _postForm('frappe.share.add', {
+      'doctype': doctype,
+      'name': name,
+      'user': user,
+      'read': read ? 1 : 0,
+      'write': write ? 1 : 0,
+      'share': share ? 1 : 0,
+      'everyone': everyone ? 1 : 0,
+      'notify': notify ? 1 : 0,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> shareRemove({
+    required String doctype,
+    required String name,
+    required String user,
+  }) {
+    return _postForm('frappe.share.remove', {
+      'doctype': doctype,
+      'name': name,
+      'user': user,
+    });
+  }
+
+  // ===========================================================================
+  // Workflow
+  // ===========================================================================
+
+  @override
+  Future<Map<String, dynamic>> applyWorkflow({
+    required Map<String, dynamic> doc,
+    required String action,
+  }) {
+    return _postForm('frappe.model.workflow.apply_workflow', {
+      'doc': json.encode(doc),
+      'action': action,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> getWorkflowTransitions(
+    Map<String, dynamic> doc,
+  ) {
+    return _postForm(
+      'frappe.model.workflow.get_transitions',
+      {'doc': json.encode(doc)},
+    );
+  }
+
+  // ===========================================================================
+  // Print / PDF
+  // ===========================================================================
+
+  @override
+  Future<List<int>> downloadPdf({
+    required String doctype,
+    required String name,
+    String format = 'Standard',
+    bool noLetterhead = false,
+    String? lang,
+    String? letterhead,
+  }) async {
+    final url = '$_baseUrl/api/method/frappe.utils.print_format.download_pdf';
+    try {
+      final response = await _dio.get<List<int>>(
+        url,
+        queryParameters: {
+          'doctype': doctype,
+          'name': name,
+          'format': format,
+          'no_letterhead': noLetterhead ? 1 : 0,
+          if (lang != null) '_lang': lang,
+          if (letterhead != null) 'letterhead': letterhead,
+        },
+        options: Options(
+          headers: _authHeaders(),
+          responseType: ResponseType.bytes,
+        ),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? const <int>[];
+      }
+      throw Exception(
+        'Failed to download PDF. Status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while downloading PDF: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPrintHtml({
+    required String doctype,
+    required String name,
+    String format = 'Standard',
+    bool noLetterhead = false,
+    String? lang,
+    String? letterhead,
+  }) async {
+    final url =
+        '$_baseUrl/api/method/frappe.www.printview.get_html_and_style';
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        url,
+        queryParameters: {
+          'doctype': doctype,
+          'name': name,
+          'print_format': format,
+          'no_letterhead': noLetterhead ? 1 : 0,
+          if (lang != null) '_lang': lang,
+          if (letterhead != null) 'letterhead': letterhead,
+        },
+        options: Options(headers: _authHeaders()),
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? <String, dynamic>{};
+      }
+      throw Exception(
+        'Failed to get print html. Status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while getting print html: $e');
     }
   }
 }
