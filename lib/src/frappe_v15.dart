@@ -1681,4 +1681,97 @@ class FrappeV15 implements FrappeApi {
       throw Exception('An error occurred while getting print html: $e');
     }
   }
+
+  // ===========================================================================
+  // Desk list view (raw Map responses)
+  // ===========================================================================
+
+  @override
+  Future<Map<String, dynamic>> reportviewGet({
+    required String doctype,
+    required List<String> fields,
+    required List<List<dynamic>> filters,
+    required String orderBy,
+    required int start,
+    required int pageLength,
+    String view = 'List',
+    String groupBy = '',
+    bool withCommentCount = true,
+  }) {
+    return _postForm('frappe.desk.reportview.get', {
+      'doctype': doctype,
+      'fields': jsonEncode(fields),
+      'filters': jsonEncode(filters),
+      'order_by': orderBy,
+      'start': start.toString(),
+      'page_length': pageLength.toString(),
+      'view': view,
+      'group_by': groupBy,
+      'with_comment_count': withCommentCount ? '1' : '0',
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> reportviewGetCount({
+    required String doctype,
+    required List<List<dynamic>> filters,
+    List<String> fields = const [],
+    bool distinct = false,
+    int limit = 1001,
+  }) {
+    return _postForm('frappe.desk.reportview.get_count', {
+      'doctype': doctype,
+      'filters': jsonEncode(filters),
+      'fields': jsonEncode(fields),
+      'distinct': distinct.toString(),
+      'limit': limit.toString(),
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>> getOpenCount({
+    required String doctype,
+    required String name,
+    required List<String> items,
+  }) async {
+    final url =
+        '$_baseUrl/api/method/frappe.desk.notifications.get_open_count';
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        url,
+        options: Options(headers: _authHeaders()),
+        queryParameters: {
+          'doctype': doctype,
+          'name': name,
+          'items': jsonEncode(items),
+        },
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data ?? <String, dynamic>{};
+      }
+      throw Exception(
+        'Failed to get open count. Status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      throw Exception(handleDioError(e));
+    } catch (e) {
+      throw Exception('An error occurred while getting open count: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getItemDashboardData({
+    required String itemCode,
+    int start = 0,
+    String sortBy = 'projected_qty',
+    String sortOrder = 'asc',
+  }) {
+    return _postForm('erpnext.stock.dashboard.item_dashboard.get_data', {
+      'item_code': itemCode,
+      'start': start.toString(),
+      'sort_by': sortBy,
+      'sort_order': sortOrder,
+    });
+  }
 }

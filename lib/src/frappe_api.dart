@@ -450,4 +450,55 @@ abstract class FrappeApi {
     String? lang,
     String? letterhead,
   });
+
+  // ===========================================================================
+  // Desk list view (raw Map responses)
+  // ===========================================================================
+
+  /// Wraps `frappe.desk.reportview.get` — the endpoint Desk uses to
+  /// populate a list view. Returns the raw response Map; the rows live
+  /// at `message.values` and the column names at `message.keys`.
+  ///
+  /// [fields] should be fully-qualified (`` `tab<Doctype>`.`<field>` ``).
+  /// [filters] is a list of `[doctype, field, op, value]` tuples.
+  Future<Map<String, dynamic>> reportviewGet({
+    required String doctype,
+    required List<String> fields,
+    required List<List<dynamic>> filters,
+    required String orderBy,
+    required int start,
+    required int pageLength,
+    String view = 'List',
+    String groupBy = '',
+    bool withCommentCount = true,
+  });
+
+  /// Wraps `frappe.desk.reportview.get_count` — total count for a Desk
+  /// list view. Returns the raw response Map (`{message: <int>}`).
+  Future<Map<String, dynamic>> reportviewGetCount({
+    required String doctype,
+    required List<List<dynamic>> filters,
+    List<String> fields = const [],
+    bool distinct = false,
+    int limit = 1001,
+  });
+
+  /// Wraps `frappe.desk.notifications.get_open_count` — per-connection
+  /// link counts. Returns the raw response Map; the badge data lives at
+  /// `message.count.external_links_found`.
+  Future<Map<String, dynamic>> getOpenCount({
+    required String doctype,
+    required String name,
+    required List<String> items,
+  });
+
+  /// Wraps `erpnext.stock.dashboard.item_dashboard.get_data` — the
+  /// warehouse-stock summary rendered above the Item form. Returns the
+  /// raw response Map (`{message: [<rows>]}`).
+  Future<Map<String, dynamic>> getItemDashboardData({
+    required String itemCode,
+    int start = 0,
+    String sortBy = 'projected_qty',
+    String sortOrder = 'asc',
+  });
 }
