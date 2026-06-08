@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_doctype_response/dashboard.dart';
-import 'package:frappe_dart/src/models/get_doctype_response/field.dart';
-import 'package:frappe_dart/src/models/get_doctype_response/link.dart';
-import 'package:frappe_dart/src/models/get_doctype_response/permission.dart';
-import 'package:frappe_dart/src/models/get_doctype_response/table_field.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/dashboard.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/field.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/link.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/permission.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/table_field.dart';
 
 class Doc {
   Doc({

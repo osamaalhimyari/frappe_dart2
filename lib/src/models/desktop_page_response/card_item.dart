@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desktop_page_response/link.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/link.dart';
 
 class CardItem {
   CardItem({

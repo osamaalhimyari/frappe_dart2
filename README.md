@@ -25,7 +25,7 @@ dependencies:
 Once installed, you can use the wrapper to interact with the Frappe API. Here's an example of how to perform a basic request:
 
 ```dart
-import 'package:frappe_dart/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart.dart';
 
 void main() async {
   final frappeClient = FrappeV15(

@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:frappe_dart/frappe_dart.dart';
-import 'package:frappe_dart/src/frappe_api.dart';
-import 'package:frappe_dart/src/models/error_response.dart';
-import 'package:frappe_dart/src/models/report_view_request.dart';
-import 'package:frappe_dart/src/models/report_view_response.dart';
-import 'package:frappe_dart/src/models/savedocs_response/savedocs_response.dart';
-import 'package:frappe_dart/src/models/send_email_response.dart';
+import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/src/frappe_api.dart';
+import 'package:frappe_dart2/src/models/error_response.dart';
+import 'package:frappe_dart2/src/models/report_view_request.dart';
+import 'package:frappe_dart2/src/models/report_view_response.dart';
+import 'package:frappe_dart2/src/models/savedocs_response/savedocs_response.dart';
+import 'package:frappe_dart2/src/models/send_email_response.dart';
 
 /// A class that implements the Frappe API for version 15.
 class FrappeV15 implements FrappeApi {

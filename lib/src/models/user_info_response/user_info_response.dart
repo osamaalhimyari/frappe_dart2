@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/user_info_response/message.dart';
+import 'package:frappe_dart2/src/models/user_info_response/message.dart';
 
 class UserInfoResponse {
   UserInfoResponse({this.message});

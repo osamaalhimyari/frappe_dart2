@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_doc_response/doc.dart';
-import 'package:frappe_dart/src/models/get_doc_response/docinfo.dart';
+import 'package:frappe_dart2/src/models/get_doc_response/doc.dart';
+import 'package:frappe_dart2/src/models/get_doc_response/docinfo.dart';
 
 class GetDocResponse {
   GetDocResponse({

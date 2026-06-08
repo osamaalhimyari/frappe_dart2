@@ -2,8 +2,8 @@
 
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_doctype_response/non_standard_fieldnames.dart';
-import 'package:frappe_dart/src/models/get_doctype_response/transaction.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/non_standard_fieldnames.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/transaction.dart';
 
 class Dashboard {
   Dashboard({

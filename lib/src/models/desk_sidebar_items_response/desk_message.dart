@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desk_sidebar_items_response/desk_page.dart';
+import 'package:frappe_dart2/src/models/desk_sidebar_items_response/desk_page.dart';
 
 /// A model class representing a message in the desk sidebar.
 ///

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/frappe_dart.dart';
-import 'package:frappe_dart/src/models/get_versions_response/frappe_app.dart';
-import 'package:frappe_dart/src/models/get_versions_response/get_versions_response.dart';
-import 'package:frappe_dart/src/models/models.dart';
+import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/src/models/get_versions_response/frappe_app.dart';
+import 'package:frappe_dart2/src/models/get_versions_response/get_versions_response.dart';
+import 'package:frappe_dart2/src/models/models.dart';
 
 class Message {
   Message({

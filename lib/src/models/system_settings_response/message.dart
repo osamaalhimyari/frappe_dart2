@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/system_settings_response/defaults.dart';
+import 'package:frappe_dart2/src/models/system_settings_response/defaults.dart';
 
 class Message {
   Message({this.timezones, this.defaults});

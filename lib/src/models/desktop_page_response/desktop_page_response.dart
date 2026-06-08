@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desktop_page_response/message.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/message.dart';
 
 class DesktopPageResponse {
   DesktopPageResponse({this.message});

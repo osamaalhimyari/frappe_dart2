@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_versions_response/message.dart';
+import 'package:frappe_dart2/src/models/get_versions_response/message.dart';
 
 class GetVersionsResponse {
   GetVersionsResponse({this.message});

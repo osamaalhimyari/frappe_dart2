@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/apps_response/message.dart';
+import 'package:frappe_dart2/src/models/apps_response/message.dart';
 
 class AppsResponse {
   AppsResponse({this.message});

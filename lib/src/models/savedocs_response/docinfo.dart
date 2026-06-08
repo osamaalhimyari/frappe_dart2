@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/savedocs_response/permissions.dart';
+import 'package:frappe_dart2/src/models/savedocs_response/permissions.dart';
 
 class Docinfo {
   const Docinfo({

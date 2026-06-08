@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desktop_page_response/cards.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/charts.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/custom_blocks.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/number_cards.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/onboardings.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/quick_lists.dart';
-import 'package:frappe_dart/src/models/desktop_page_response/shortcuts.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/cards.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/charts.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/custom_blocks.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/number_cards.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/onboardings.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/quick_lists.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/shortcuts.dart';
 
 class Message {
   Message({

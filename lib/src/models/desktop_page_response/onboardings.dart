@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desktop_page_response/onboarding_item.dart';
+import 'package:frappe_dart2/src/models/desktop_page_response/onboarding_item.dart';
 
 class Onboardings {
   Onboardings({this.items});

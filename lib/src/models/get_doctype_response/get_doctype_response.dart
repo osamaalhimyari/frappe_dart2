@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/get_doctype_response/doc.dart';
+import 'package:frappe_dart2/src/models/get_doctype_response/doc.dart';
 
 class GetDoctypeResponse {
   GetDoctypeResponse({

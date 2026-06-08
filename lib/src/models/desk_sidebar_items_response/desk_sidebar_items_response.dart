@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart/src/models/desk_sidebar_items_response/desk_message.dart';
+import 'package:frappe_dart2/src/models/desk_sidebar_items_response/desk_message.dart';
 
 /// Represents the response for desk sidebar items.
 class DeskSidebarItemsResponse {
