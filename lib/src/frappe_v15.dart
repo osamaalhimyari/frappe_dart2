@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart2.dart';
 import 'package:frappe_dart2/src/frappe_api.dart';
 import 'package:frappe_dart2/src/models/error_response.dart';
 import 'package:frappe_dart2/src/models/report_view_request.dart';

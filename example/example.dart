@@ -1,4 +1,4 @@
-import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart2.dart';
 
 void main() async {
   final frappe = FrappeV15(

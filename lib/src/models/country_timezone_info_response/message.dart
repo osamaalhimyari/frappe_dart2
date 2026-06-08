@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart2.dart';
 import 'package:frappe_dart2/src/models/country_timezone_info_response/country.dart';
 import 'package:frappe_dart2/src/models/get_versions_response/get_versions_response.dart';
 import 'package:frappe_dart2/src/models/models.dart';

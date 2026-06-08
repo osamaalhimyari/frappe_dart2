@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart2.dart';
 import 'package:test/test.dart';
 
 void main() {

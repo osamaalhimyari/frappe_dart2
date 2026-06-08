@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:frappe_dart2/frappe_dart.dart';
+import 'package:frappe_dart2/frappe_dart2.dart';
 import 'package:frappe_dart2/src/models/desk_sidebar_items_response/desk_message.dart';
 import 'package:frappe_dart2/src/models/desktop_page_response/message.dart';
 import 'package:frappe_dart2/src/models/desktop_page_response/shortcut_item.dart';
